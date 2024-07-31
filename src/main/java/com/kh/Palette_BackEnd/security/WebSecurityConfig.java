@@ -48,7 +48,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .accessDeniedHandler(jwtAccessDeniedHandler)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/","/auth/**","/main/**","/wss/**","/chat/**","/static/**","/date-clothes/**","/clothes/**","https://developers.kakao.com/","/font/**,*/member/**").permitAll()
+                .antMatchers("/","/auth/**","/main/**","/wss/**","/chat/**","/static/**","/date-clothes/**","/clothes/**","https://developers.kakao.com/","/font/**,*/member/**","/ws/**").permitAll()
                 .antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**", "/sign-api/exception","/mapmarker/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/favicon.ico","/manifest.json","/logo192.png","/kakaoLogin","/HancomSans-Light_0.ttf").permitAll()
