@@ -6,6 +6,38 @@ import ChatModal from "./ChatModal";
 import chat from "../../img/background/theme/chat.jpg";
 import chat_1 from "../../img/background/theme/chat-1.jpg";
 import MainAxios from "../../axiosapi/MainAxios";
+// import Slider from "react-slick";
+// import "slick-carousel/slick/slick.css";
+// import "slick-carousel/slick/slick-theme.css";
+
+// const StyledSlider = styled(Slider)`
+//   .slick-list {
+//     overflow: hidden;
+//   }
+
+//   .slick-slide {
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//   }
+
+//   .slick-dots {
+//     bottom: 10px;
+
+//     li {
+//       margin: 0 5px;
+//     }
+
+//     button:before {
+//       font-size: 12px;
+//       color: gray;
+//     }
+
+//     .slick-active button:before {
+//       color: black;
+//     }
+//   }
+// `;
 
 const turnPageLeft = keyframes`
   0% {
@@ -22,79 +54,55 @@ const turnPageLeft = keyframes`
   }
 `;
 
-const BookTheme = styled.div`
-  width: 497px;
-  height: 67vh;
-  margin-top: 5vh;
-  margin-left: 0.7vw;
-  border: 1px solid #696969;
-  background-image: url(${chat});
-  /* background-color: #d0d7e9; */
-  background-size: cover;
+const BookWrapper = styled.div`
+  width: 100%;
+  overflow: hidden;
   display: flex;
-  align-items: center;
   justify-content: center;
-  @media screen and (max-width: 1200px) {
-    width: 420px;
-    height: 56vh;
-    margin-top: 4.2vh;
-  }
-  @media screen and (max-width: 768px) {
-    width: 280px;
-    height: 35vh;
-    margin-top: 2.8vh;
-  }
+  align-items: center;
+`;
+
+const BookTheme = styled.div`
+  width: 92vw;
+  height: 75vh;
+  border: 1px solid #696969;
+  background-color: #fff9f2;
+  /* background-image: url(${chat});
+  background-size: cover; */
+  display: flex;
+  justify-content: space-between;
+  border-radius: 5px;
 `;
 
 const BookTheme2 = styled.div`
-  width: 497px;
-  height: 67vh;
-  margin-top: 5vh;
-  margin-left: 0.05vw;
+  width: 100%;
+  height: 75vh;
   border: 1px solid #696969;
-  background-image: url(${chat_1});
-  /* background-color: #d0d7e9; */
-  background-size: cover;
-  @media screen and (max-width: 1200px) {
-    width: 420px;
-    height: 56vh;
-    margin-top: 4.2vh;
-  }
-  @media screen and (max-width: 768px) {
-    width: 280px;
-    height: 35vh;
-    margin-top: 2.8vh;
-  }
+  background-color: #fff9f2;
+  /* background-image: url(${chat});
+  background-size: cover; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
 `;
 
 const BookSign2 = styled.div`
-  width: 100%;
+  width: 92vw;
   height: 100%;
-  background-image: url(${chat_1});
-  background-size: cover;
-  transform: perspective(1000px) rotateY(0deg); /* 애니메이션 초기 위치 */
-  transform-origin: left;
   display: flex;
-  flex-direction: column;
+  justify-content: end;
   align-items: center;
-  justify-content: center;
-  ${({ animate }) =>
-    animate &&
-    css`
-      animation: ${turnPageLeft} 1.8s forwards;
-    `}
+  flex-direction: column;
 `;
 
 const ChatListContainer = styled.div`
-  width: 90%;
-  height: 90%;
+  width: 100%;
+  height: 100%;
   padding: 22px;
+  border-radius: 5px;
   position: relative;
-  background-color: #f3f3f3;
-  opacity: 0.9;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  background-color: #dbe5f8;
+  background-color: #fff9f2;
   overflow: auto;
 `;
 
@@ -171,7 +179,7 @@ const HeaderName = styled.div`
   color: #333;
   display: flex;
   align-items: flex-end;
-  justify-content: flex-start;
+  justify-content: center;
   @media screen and (max-width: 1200px) {
     font-size: 12px;
   }
@@ -188,11 +196,11 @@ const ChatName = styled.p`
 
 const CircleFixedButton = styled.button`
   position: fixed;
-  bottom: 24px;
-  right: 30px;
+  bottom: 13%;
+  right: 20px;
   z-index: 10;
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -217,8 +225,7 @@ const CircleFixedButton = styled.button`
 
 const PreviewContainer = styled.div`
   width: 90%;
-  height: 65%;
-  background: rgba(255, 255, 255, 0.9);
+  height: 75%;
   border-radius: 10px;
   padding: 22px;
   overflow-y: hidden;
@@ -253,7 +260,6 @@ const BtnBox = styled.div`
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   align-items: center;
-  background-color: rgb(255, 255, 255, 0.8);
   ${({ animate }) =>
     animate &&
     css`
@@ -296,6 +302,15 @@ function ChatList({ url, clearUrl }) {
 
   const [animate, setAnimate] = useState(false);
 
+  const settings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    swipeToSlide: true,
+  };
+
   const pageMove = useCallback(() => {
     setAnimate(true);
     setTimeout(() => {
@@ -319,6 +334,19 @@ function ChatList({ url, clearUrl }) {
     setCreateModal(false);
   };
 
+  // useEffect(() => {
+  //   const fetchChatRooms = async () => {
+  //     try {
+  //       const response = await ChatAxiosApi.chatList(email);
+  //       const filteredRooms = filterChatRooms(response.data, email);
+  //       setChatRooms(filteredRooms);
+  //     } catch (error) {
+  //       console.error("Error fetching chat rooms:", error);
+  //     }
+  //   };
+  //   fetchChatRooms(); // 최초 한 번 호출
+  //   selectChatRoom(chatRooms.roomId);
+
   const coupleNickNameAxois = useCallback(
     async (couple) => {
       const resNickName = await MainAxios.searchNickName(email, couple);
@@ -327,24 +355,18 @@ function ChatList({ url, clearUrl }) {
     [email]
   );
 
-  useEffect(() => {
-    const fetchChatRooms = async () => {
-      try {
-        const response = await ChatAxiosApi.chatList(email);
-        const filteredRooms = filterChatRooms(response.data, email);
-        setChatRooms(filteredRooms);
-      } catch (error) {
-        console.error("Error fetching chat rooms:", error);
-      }
-    };
-    fetchChatRooms(); // 최초 한 번 호출
-
-    // 1초마다 채팅방 목록 업데이트
-    const intervalId = setInterval(fetchChatRooms, 1000);
-
-    // 컴포넌트 언마운트 시 인터벌 해제
-    return () => clearInterval(intervalId);
-  }, [email]);
+  const fetchLastMessage = async (roomId) => {
+    try {
+      const response = await ChatAxiosApi.pastChatDetail(roomId);
+      const messages = response.data;
+      return messages.length > 0
+        ? messages[messages.length - 1]
+        : { sender: "", message: "내용이 없습니다" };
+    } catch (error) {
+      console.error("Error fetching last message:", error);
+      return { sender: "", message: "내용을 가져올 수 없습니다" };
+    }
+  };
 
   const filterChatRooms = (rooms, email) => {
     return rooms.filter(
@@ -353,6 +375,29 @@ function ChatList({ url, clearUrl }) {
         !room.deleted
     );
   };
+
+  useEffect(() => {
+    const fetchChatRooms = async () => {
+      try {
+        const response = await ChatAxiosApi.chatList(email);
+        const rooms = response.data;
+        const filteredRooms = filterChatRooms(rooms, email);
+        const updatedRooms = await Promise.all(
+          filteredRooms.map(async (room) => {
+            const lastMessage = await fetchLastMessage(room.roomId);
+            return { ...room, lastMessage };
+          })
+        );
+        setChatRooms(updatedRooms);
+      } catch (error) {
+        console.error("Error fetching chat rooms:", error);
+      }
+    };
+    // 1초마다 채팅방 목록 업데이트
+    const intervalId = setInterval(fetchChatRooms, 1000);
+    // 컴포넌트 언마운트 시 인터벌 해제
+    return () => clearInterval(intervalId);
+  }, [email]);
 
   const enterChatRoom = (roomId) => {
     navigate(`/chat/${roomId}`);
@@ -363,11 +408,11 @@ function ChatList({ url, clearUrl }) {
     try {
       const response = await ChatAxiosApi.pastChatDetail(roomId);
       let messages = response.data;
-      // 최근에 온 5개까지 미리보기
+      // 최근에 온 1개까지 미리보기
       messages = messages.reverse();
       setPreviewMessages(
         messages.length > 0
-          ? messages.slice(0, 5)
+          ? messages.slice(0, 1)
           : [{ sender: "", message: "내용이 없습니다" }]
       );
     } catch (error) {
@@ -384,9 +429,12 @@ function ChatList({ url, clearUrl }) {
   const createChatRoom = () => {
     setCreateModal(true);
   };
-
+  const truncateRoomName = (name) => {
+    return name.length > 10 ? name.slice(0, 10) + "..." : name;
+  };
   return (
-    <>
+    <BookWrapper>
+      {/* <StyledSlider {...settings}> */}
       <BookTheme>
         <ChatListContainer>
           <Header>채팅방 목록</Header>
@@ -394,52 +442,26 @@ function ChatList({ url, clearUrl }) {
             {chatRooms.map((room) => (
               <ChatRoom
                 key={room.roomId}
-                onClick={() => selectChatRoom(room.roomId)}
+                onClick={() => enterChatRoom(room.roomId)}
               >
-                <ChatName>{room.name}</ChatName>
+                <ChatName>{truncateRoomName(room.name)}</ChatName>
+                <PreviewMessage isMe={room.lastMessage.sender === email}>
+                  {room.lastMessage.sender
+                    ? `${getNickNameByEmail(
+                        room.lastMessage.sender
+                      )}  ${truncateRoomName(room.lastMessage.message)}`
+                    : room.lastMessage.message}
+                </PreviewMessage>
               </ChatRoom>
             ))}
           </ChatUl>
           <CircleFixedButton onClick={createChatRoom}></CircleFixedButton>
         </ChatListContainer>
       </BookTheme>
-      <BookTheme2>
-        <BookSign2 animate={animate}>
-          {selectedRoom && (
-            <>
-              <PreviewContainer animate={animate}>
-                <HeaderDiv>
-                  <HeaderView>미리보기</HeaderView>
-                  <HeaderName>
-                    {" "}
-                    (채팅방 :{" "}
-                    {chatRooms
-                      .find((room) => room.roomId === selectedRoom)
-                      ?.name.slice(0, 5)}
-                    )
-                  </HeaderName>
-                </HeaderDiv>
-                {previewMessages.map((message, index) => (
-                  <PreviewMessage key={index} isMe={message.sender === email}>
-                    {message.sender
-                      ? `${getNickNameByEmail(message.sender)} : ${
-                          message.message
-                        }`
-                      : message.message}
-                  </PreviewMessage>
-                ))}
-              </PreviewContainer>
-              <BtnBox animate={animate}>
-                <EnterBtn onClick={() => enterChatRoom(selectedRoom)}>
-                  입장하기
-                </EnterBtn>
-              </BtnBox>
-            </>
-          )}
-        </BookSign2>
-      </BookTheme2>
+
+      {/* </StyledSlider> */}
       <ChatModal isOpen={createModal} onClose={closeModal}></ChatModal>
-    </>
+    </BookWrapper>
   );
 }
 

@@ -61,7 +61,8 @@ const BookTheme = styled.div`
   border: 1px solid #696969;
   background-color: #fff9f2;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
   border-radius: 5px;
 `;
 
@@ -77,15 +78,16 @@ const BookTheme2 = styled.div`
 `;
 
 const BookSign = styled.div`
-  width: 425px;
+  width: 92vw;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 `;
+
 const BookSign2 = styled.div`
-  width: 425px;
+  width: 92vw;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -150,6 +152,10 @@ const Dday = styled.div`
   width: 95%;
   height: 80%;
   border: 1px solid #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 const RecentTitle = styled.div`
   width: 100%;
@@ -215,13 +221,13 @@ const VisitDiv = styled.div`
   }
   & > div > input {
     width: 89%;
-    height: 2vh;
+    aspect-ratio: 150/20;
     padding-left: 1.083vw;
     background-color: rgba(0, 0, 0, 0.4);
     border-radius: 10px;
     outline: none;
     color: #fff;
-    font-size: 0.8vw;
+    font-size: 13px;
     font-weight: 500;
   }
 `;
@@ -248,7 +254,7 @@ const VisitList = styled.div`
 `;
 const VisitSearchBtn = styled(GiArchiveResearch)`
   width: 11%;
-  height: 2.5vh;
+  height: auto;
   color: green;
   cursor: pointer;
 `;
@@ -294,8 +300,8 @@ const flipInX = keyframes`
   }
 `;
 const Setting = styled(IoSettingsSharp)`
-  width: 5%;
-  height: 3.148vh;
+  width: 21px;
+  height: 21px;
   color: rgba(0, 0, 0, 0.8);
   cursor: pointer;
   &:hover {
@@ -304,7 +310,6 @@ const Setting = styled(IoSettingsSharp)`
 `;
 const SettingFormat = styled.div`
   width: 200px;
-  /* padding-left: 150px; */
   height: auto;
   border-radius: 10px;
   margin-top: 18vh;
@@ -355,6 +360,7 @@ const BtnDiv = styled.div`
 const XbtnDiv = styled.div`
   width: 230px;
   height: 8vh;
+  margin-top: 2vh;
   padding-right: 20px;
   display: flex;
   justify-content: end;
@@ -377,9 +383,9 @@ const VisitContainer = styled.div`
   align-items: center;
 `;
 const BackMyHome = styled.div`
-  width: 20%;
-  height: 30%;
-  font-size: 10px;
+  width: 100px;
+  aspect-ratio: 3.5/1;
+  font-size: 12px;
   font-weight: 700;
   background-color: rgba(0, 0, 0, 0.4);
   border-radius: 10px;
@@ -412,6 +418,8 @@ const MainPage = () => {
   const [isMyHome, setIsMyHome] = useState(true);
   //갤러리에서 이미지 메인 화면에 오도록 저장하는 변수
   const [gallaryImg, setGallaryImg] = useState(Array(4).fill(null));
+  //내홈으로 돌아가기 숨기기 변수
+  const [MyHomeBtnState, setMyHomeBtnState] = useState(true);
   //갤러리 이미지 받아오는 비동기 함수
   const listGallaryImg = async (siteCoupleName) => {
     //커플 이름으로 email 받아오는 await 함수
@@ -470,9 +478,11 @@ const MainPage = () => {
   //설정 폼 변화 함수
   const settingFromStatus = () => {
     setSettingForm(true);
+    setMyHomeBtnState(false);
   };
   const closeFromStatus = () => {
     setSettingForm(false);
+    setMyHomeBtnState(true);
   };
   const [boardSaveData, setBoardSaveData] = useState([]);
   const email = sessionStorage.getItem("email");
@@ -591,9 +601,11 @@ const MainPage = () => {
         <BookTheme2>
           <BookSign2>
             <SettingDiv>
-              <BackMyHome onClick={goHomeOnClickHandler}>
-                내 홈으로 돌아가기
-              </BackMyHome>
+              {MyHomeBtnState && (
+                <BackMyHome onClick={goHomeOnClickHandler}>
+                  내 홈으로 돌아가기
+                </BackMyHome>
+              )}
               <div className="space" />
               {!settingForm && (
                 <Setting onClick={settingFromStatus} openform={settingForm} />

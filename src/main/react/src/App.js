@@ -1,7 +1,6 @@
 import "./App.css";
 import PaletteStyle from "./PaletteStyle";
-import OpenBook from "./common/background/OpenBook";
-import CloseBook from "./common/background/CloseBook";
+import NotePaper from "./common/background/NotePaper";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import AfterMain from "./pages/main/MainPage";
 import NotLogin from "./pages/main/NotLogin";
@@ -25,33 +24,19 @@ import Modify from "./pages/setting/Modify";
 import Withdrawal from "./pages/setting/Withdrawal";
 import PalettePage from "./pages/palette/PalettePage";
 import GuestBoardGuestbook from "./pages/board/GuestBoardGuestbook";
-import GuestBoardDetails from "./pages/board/GuestBoardDetails";
 import PaletteHelp from "./pages/palette/PaletteHelp";
 import PaletteNotice from "./pages/palette/PaletteNotice";
 import PaletteNoticeDetails from "./pages/palette/PaletteNoticeDetails";
 import PaletteInquiry from "./pages/palette/PaletteInquiry";
 import PaletteAd from "./pages/palette/PaletteAd";
 import PaletteCustomer from "./pages/palette/PaletteCustomer";
-import ErrorPage from "./error/ErrorPage";
-import KakaoRedirect from "./pages/login/redirect/KakaoRedirect";
 import ChatList from "./pages/chat/ChatList";
 import ChatRoomCreate from "./pages/chat/ChatRoomCreate";
 import BoardUpdate from "./pages/board/BoardUpdate";
 import MainPage from "./pages/main/BeforeMainPage";
-import { useState } from "react";
-import MobileBook from "./common/background/MobileBook";
+import LoginLetter from "./common/background/LoginLetter";
 
 function App() {
-  const [url, setUrl] = useState("");
-
-  const handleNavigate = (path) => {
-    setUrl(path);
-    console.log("Navigating to:", path);
-  };
-  const clearUrl = () => {
-    setUrl("");
-  };
-
   return (
     <>
       {/* 전역스타일적용 */}
@@ -59,101 +44,40 @@ function App() {
       <PaletteStyle />
       <Router>
         <Routes>
-          <Route path="/" element={<PalettePage />} />
-          <Route path="/kakaoLogin" element={<KakaoRedirect />} />
-          <Route path="/error" element={<ErrorPage />} />
-          <Route path="/customer" element={<PaletteCustomer />} />
-          <Route path="/customer/help" element={<PaletteHelp />} />
-          <Route path="/customer/inquiry" element={<PaletteInquiry />} />
-          <Route path="/customer/ad" element={<PaletteAd />} />
-          <Route path="/customer/notice" element={<PaletteNotice />} />
-          <Route
-            path="/customer/notice/:id"
-            element={<PaletteNoticeDetails />}
-          />
-          <Route element={<CloseBook />}>
-            <Route path="/not-login" element={<NotLogin />} />
+          <Route element={<NotePaper notlogin={true} />}>
+            <Route path="/" element={<NotLogin />} />
           </Route>
-          <Route element={<MobileBook />}>
+          <Route element={<LoginLetter notLoginState={false} />}>
             <Route path="/login-page" element={<LoginPage />} />
             <Route path="/signup-page" element={<SignupPage />} />
             <Route path="/find-email" element={<FindEmail />} />
             <Route path="/find-password" element={<FindPassword />} />
           </Route>
-          <Route element={<OpenBook onNavigate={handleNavigate} />}>
+          <Route element={<LoginLetter notLoginState={true} />}>
             <Route path="/main-page" element={<MainPage />} />
-            <Route
-              path="/:coupleName/main-page"
-              element={<AfterMain url={url} clearUrl={clearUrl} />}
-            />
-            <Route
-              path="/date-clothes"
-              element={<DateClothes url={url} clearUrl={clearUrl} />}
-            />
-            <Route
-              path="/date-album"
-              element={<DateAlbum url={url} clearUrl={clearUrl} />}
-            />
-            <Route
-              path="/date-album2"
-              element={<DateAlbum2 url={url} clearUrl={clearUrl} />}
-            />
-            <Route
-              path="/date-album3"
-              element={<DateAlbum3 url={url} clearUrl={clearUrl} />}
-            />
-            <Route
-              path="/date-album4"
-              element={<DateAlbum4 url={url} clearUrl={clearUrl} />}
-            />
-            <Route
-              path="/date-album5"
-              element={<DateAlbum5 url={url} clearUrl={clearUrl} />}
-            />
-            <Route
-              path="/date-diary"
-              element={<DateDiary url={url} clearUrl={clearUrl} />}
-            />
-            <Route
-              path="/Chat"
-              element={<ChatList url={url} clearUrl={clearUrl} />}
-            />
+            <Route path="/:coupleName/main-page" element={<AfterMain />} />
+            <Route path="/date-clothes" element={<DateClothes />} />
+            <Route path="/date-album" element={<DateAlbum />} />
+            <Route path="/date-album2" element={<DateAlbum2 />} />
+            <Route path="/date-album3" element={<DateAlbum3 />} />
+            <Route path="/date-album4" element={<DateAlbum4 />} />
+            <Route path="/date-album5" element={<DateAlbum5 />} />
+            <Route path="/date-diary" element={<DateDiary />} />
+            <Route path="/Chat" element={<ChatList />} />
             <Route path="/Chatcreate" element={<ChatRoomCreate />} />
-            <Route
-              path="/Chat/:roomId"
-              element={<ChatMain url={url} clearUrl={clearUrl} />}
-            />
-            <Route
-              path="/:coupleName/dateplanner"
-              element={<DatePlanner url={url} clearUrl={clearUrl} />}
-            />
-            <Route
-              path="/:coupleName/board-guestbook"
-              element={<GuestBoardGuestbook url={url} clearUrl={clearUrl} />}
-            />
-            <Route
-              path="/:coupleName/board-details/:id"
-              element={<BoardDetails url={url} clearUrl={clearUrl} />}
-            />
-            <Route
-              path="/:coupleName/board-write"
-              element={<BoardWrite url={url} clearUrl={clearUrl} />}
-            />
-            <Route
-              path="/:coupleName/board-update"
-              element={<BoardUpdate url={url} clearUrl={clearUrl} />}
-            />
+            <Route path="/Chat/:roomId" element={<ChatMain />} />
+            <Route path="/dateplanner" element={<DatePlanner />} />
+            <Route path="/board-guestbook" element={<GuestBoardGuestbook />} />
+            <Route path="/board-details/:id" element={<BoardDetails />} />
+            <Route path="/board-write" element={<BoardWrite />} />
+            <Route path="/board-update" element={<BoardUpdate />} />
             <Route
               path="/guest-board-guestbook"
               element={<GuestBoardGuestbook />}
             />
-            <Route
-              path="/guest-board-details"
-              element={<GuestBoardDetails />}
-            />
           </Route>
 
-          <Route element={<CloseBook modify={true} />}>
+          <Route element={<LoginLetter notLoginState={false} />}>
             <Route path="/modify" element={<Modify />} />
             <Route path="/withdrawal" element={<Withdrawal />} />
           </Route>

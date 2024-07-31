@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import styled, { css, keyframes } from "styled-components";
+import React, { useState, useEffect, useRef } from "react";
+import styled from "styled-components";
 import MapContainer from "./MapContainer";
 import PlannerForm from "./PlannerForm";
 import SavedCoursesList from "./SavedCourseList";
@@ -10,90 +10,118 @@ import MapModal from "./MapModal";
 import DatePlannerAxios from "../../axiosapi/DatePlannerAxios";
 import useAddress from "../../hooks/useLocation";
 // import MemberAxiosApi from "../../axiosapi/MemberAxiosApi";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import ReactDOMServer from "react-dom/server";
 
-const turnPageLeft = keyframes`
-  0% {
-    transform: perspective(1000px) rotateY(0deg);
-    transform-origin: left;
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+const StyledSlider = styled(Slider)`
+  .slick-list {
+    overflow: hidden;
   }
-  30% {
-    transform: perspective(1600px) rotateY(-25deg);
-    transform-origin: left;
-  } 
-  100% {
-    transform: perspective(1000px) rotateY(-180deg);
-    transform-origin: left;
+
+  .slick-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .slick-dots {
+    bottom: 10px;
+
+    li {
+      margin: 0 5px;
+    }
+
+    button:before {
+      font-size: 12px;
+      color: gray;
+    }
+
+    .slick-active button:before {
+      color: black;
+    }
   }
 `;
 
 const BookWrapper = styled.div`
-  border: 1px solid green;
-  width: 85%;
-  height: 82.5%;
-  margin-top: 3.5%;
-  margin-left: 14px;
-  background-size: cover;
-  /* opacity: 0.8; */
+  width: 100%;
+  overflow: hidden;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
 `;
 
 const LBookContainer = styled.div`
-  border: 1px solid red;
-  background-image: url(${theme6});
-  background-size: cover;
-  background-position: left;
-  width: 50%;
-  height: 100%;
+  width: 92vw;
+  height: 75vh;
+  border: 1px solid #696969;
+  background-color: #fff9f2;
+  /* background-image: url(${theme6});
+  background-size: cover; */
+  display: flex;
+  justify-content: space-between;
+  border-radius: 5px;
 `;
 
 const BookTheme2 = styled.div`
-  width: 50%;
-  height: 100%;
-  background-image: url(${theme6});
-  background-size: cover;
-  transform: perspective(1000px) rotateY(0deg); /* 애니메이션 초기 위치 */
-  transform-origin: left;
-  background-position: right;
+  width: 92vw;
+  height: 75vh;
+  background-color: #fff9f2;
+  border: 1px solid #696969;
+  /* background-image: url(${theme6});
+  background-size: cover; */
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+`;
+
+const BookSign = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  flex-direction: column;
 `;
 
 const BookSign2 = styled.div`
   width: 100%;
   height: 100%;
-  background-image: url(${theme6});
-  background-size: cover;
-  transform: perspective(1000px) rotateY(0deg); /* 애니메이션 초기 위치 */
-  transform-origin: left;
-  background-position: right;
   display: flex;
-  align-items: center;
   justify-content: center;
-  ${({ animate }) =>
-    animate &&
-    css`
-      animation: ${turnPageLeft} 1.8s forwards;
-    `}
+  align-items: center;
+  flex-direction: column;
 `;
 
 const RBookContainer = styled.div`
-  border: 1px solid blue;
   width: 100%;
-  height: 100%;
-  ${({ animate }) =>
-    animate &&
-    css`
-      opacity: 0;
-      transition: opacity 1.4s;
-    `}
+  height: 95%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  flex-direction: column;
+`;
+const NextBtn = styled.div`
+  width: 80px;
+  height: 30px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 500;
+  background-color: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
 `;
 
-
-const DatePlanner = ({url, clearUrl}) => {
+const DatePlanner = ({ url, clearUrl }) => {
   const { location } = useAddress();
   const [currCategory, setCurrCategory] = useState("");
   const [places, setPlaces] = useState([]);
@@ -116,28 +144,16 @@ const DatePlanner = ({url, clearUrl}) => {
   const { coupleName } = useParams(); // useParams를 통해 coupleName 파라미터 추출
   const currentOverlayRef = useRef(null); // CustomOverlay 상태를 useRef로 관리
   console.log("coupleName : ", coupleName);
-
-  const [animate, setAnimate] = useState(false);
-  const navigate = useNavigate();
-
-  const pageMove = useCallback(() => {
-    setAnimate(true);
-    setTimeout(() => {
-      navigate(url);
-      clearUrl();
-    }, 1800);
-  }, [navigate, url, clearUrl]);
-
-  useEffect(() => {
-    if (url) {
-      const encodedUrl = encodeURI(url); //공백을 문자로 인코딩
-      if (window.location.pathname !== encodedUrl) {
-        pageMove();
-      } else {
-        clearUrl();
-      }
-    }
-  }, [url, pageMove, clearUrl]);
+  // 버튼 상태 변수
+  const [nextBtn, setNextBtn] = useState(false);
+  const settings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    swipeToSlide: true,
+  };
 
   // 모든 코스 조회 및 저장된 코스 목록 업데이트
   useEffect(() => {
@@ -271,10 +287,6 @@ const DatePlanner = ({url, clearUrl}) => {
     // displayPlaceInfo(place);
   };
 
-  
-
- 
-
   // 모달 열기
   const openModal = async (index) => {
     try {
@@ -383,54 +395,74 @@ const DatePlanner = ({url, clearUrl}) => {
     currentOverlayRef.current = newOverlay; // Ref를 사용하여 업데이트
     console.log("setCurrentOverlay", newOverlay);
   };
-
   return (
     <BookWrapper>
-      <LBookContainer>
-        <PlannerForm
-          title={title}
-          selectedPlaces={selectedPlaces}
-          handleSaveCourse={handleSaveCourse}
-          setSelectedPlaces={setSelectedPlaces}
-          isEditing={isEditing}
-          handleDeletePlace={handleDeletePlace}
-          handleClearPlaces={handleClearPlaces}
-        />
+      {!nextBtn && (
+        <BookTheme2>
+          <BookSign2>
+            <RBookContainer>
+              <MapContainer
+                clearOverlay={clearOverlay}
+                mapContainer={mapContainer}
+                displayPlaceInfo={displayPlaceInfo}
+                placeOverlay={placeOverlay}
+                map={map}
+                setMap={setMap}
+                currCategory={currCategory}
+                setCurrCategory={setCurrCategory}
+                places={places}
+                setPlaces={setPlaces}
+                location={location}
+              />
+              <PlaceCardList
+                places={places}
+                onClickPlaceBtn={handlePlaceCardClick}
+                onClickPlaceCard={onClickPlaceCard}
+                selectedPlaces={selectedPlaces}
+                currCategory={currCategory}
+              />
+            </RBookContainer>
+            <NextBtn
+              onClick={() => {
+                setNextBtn(true);
+              }}
+            >
+              다음
+            </NextBtn>
+          </BookSign2>
+        </BookTheme2>
+      )}
+      {nextBtn && (
+        <LBookContainer>
+          <BookSign>
+            <PlannerForm
+              title={title}
+              selectedPlaces={selectedPlaces}
+              handleSaveCourse={handleSaveCourse}
+              setSelectedPlaces={setSelectedPlaces}
+              isEditing={isEditing}
+              handleDeletePlace={handleDeletePlace}
+              handleClearPlaces={handleClearPlaces}
+            />
 
-        <SavedCoursesList
-          savedCourses={savedCourses}
-          setSelectedCourse={(course) => setSelectedPlaces(course.places)}
-          handleEditCourse={handleEditCourse}
-          handleDeleteCourse={handleDeleteCourse}
-          openModal={(index) => openModal(index)}
-        />
-      </LBookContainer>
-      <BookTheme2>
-      <BookSign2 animate={animate}>
-        <RBookContainer animate={animate}>
-          <MapContainer
-            clearOverlay={clearOverlay}
-            mapContainer={mapContainer}
-            displayPlaceInfo={displayPlaceInfo}
-            placeOverlay={placeOverlay}
-            map={map}
-            setMap={setMap}
-            currCategory={currCategory}
-            setCurrCategory={setCurrCategory}
-            places={places}
-            setPlaces={setPlaces}
-            location={location}
-          />
-          <PlaceCardList
-            places={places}
-            onClickPlaceBtn={handlePlaceCardClick}
-            onClickPlaceCard={onClickPlaceCard}
-            selectedPlaces={selectedPlaces}
-            currCategory={currCategory}
-          />
-        </RBookContainer>
-      </BookSign2>
-      </BookTheme2>
+            <SavedCoursesList
+              savedCourses={savedCourses}
+              setSelectedCourse={(course) => setSelectedPlaces(course.places)}
+              handleEditCourse={handleEditCourse}
+              handleDeleteCourse={handleDeleteCourse}
+              openModal={(index) => openModal(index)}
+            />
+            <NextBtn
+              onClick={() => {
+                setNextBtn(false);
+              }}
+            >
+              이전
+            </NextBtn>
+          </BookSign>
+        </LBookContainer>
+      )}
+
       <MapModal
         isOpen={isModalOpen}
         onClose={closeModal}

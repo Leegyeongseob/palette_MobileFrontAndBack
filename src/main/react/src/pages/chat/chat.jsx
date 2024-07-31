@@ -45,28 +45,23 @@ const GlobalStyle = styled.div`
     background: #a3a59c; /* 스크롤바 호버 색상 */
   }
 `;
+
+const BookWrapper = styled.div`
+  width: 100%;
+  overflow: hidden;
+`;
+
 const Chatpage = styled.div`
-  width: 997px;
-  height: 67vh;
-  margin-top: 4.5%;
-  margin-left: 0.7vw;
-  border: 1px solid #696969;  
+  width: 92vw;
+  height: 75vh;
+  border: 1px solid #696969;
+  border-radius: 5px;
   background: url(${(props) => props.backgroundImage}) no-repeat center center;
   /* background-color: #9b9b9b; */
   background-size: cover;
   position: relative;
-
-  @media screen and (max-width: 1200px) {
-    width: 100%;
-    height: 56vh;
-    margin-top: 4vh;
-  }
-  @media screen and (max-width: 768px) {
-    width: 100%;
-    height: 34.5vh;
-    margin-top: 3vh;
-  }
 `;
+
 const Textarea = styled.div`
   width: 100%;
   display: flex;
@@ -78,21 +73,7 @@ const Textarea = styled.div`
   height: ${({ isPlusMenuVisible }) =>
     isPlusMenuVisible
       ? "calc(68vh - 25vh)"
-      : "calc(68vh - 11.5vh); border-bottom: 1px solid gray;"}; // 기본 화면 크기
-  @media screen and (max-width: 1200px) {
-    width: 832px;
-    height: ${({ isPlusMenuVisible }) =>
-      isPlusMenuVisible
-        ? "calc(60vh - 24.7vh)"
-        : "calc(60vh - 14vh)"}; // 중간 화면 크기
-  }
-  @media screen and (max-width: 768px) {
-    width: 560px;
-    height: ${({ isPlusMenuVisible }) =>
-      isPlusMenuVisible
-        ? "calc(36vh - 15vh)"
-        : "calc(36vh - 9vh)"}; // 작은 화면 크기
-  }
+      : "calc(68vh - 4.5vh); border-bottom: 1px solid gray;"}; // 기본 화면 크기
 `;
 
 // const MessageBox = styled.div`
@@ -133,29 +114,17 @@ const TopText = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  font-size: 20px;
-  @media screen and (max-width: 1200px) {
-    font-size: 15px;
-  }
-  @media screen and (max-width: 768px) {
-    font-size: 12px;
-  }
+  font-size: 15px;
 `;
 
 const TopName = styled.div`
-  width: 30%;
+  width: 40%;
   height: 95%;
   padding-right: 2%;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  font-size: 16px;
-  @media screen and (max-width: 1200px) {
-    font-size: 13px;
-  }
-  @media screen and (max-width: 768px) {
-    font-size: 10px;
-  }
+  font-size: 13px;
 `;
 
 const TopBtn = styled.div`
@@ -188,12 +157,6 @@ const PlusMenu = styled.div`
   display: ${(props) => (props.isVisible ? "flex" : "none")};
   position: absolute;
   bottom: 8%;
-  @media screen and (max-width: 1200px) {
-    bottom: 9%;
-  }
-  @media screen and (max-width: 768px) {
-    bottom: 14%;
-  }
 `;
 
 const TemaMenu = styled.div`
@@ -311,7 +274,7 @@ const InputText = styled.div`
   }
 `;
 
-const ChatMain = ({url, clearUrl}) => {
+const ChatMain = ({ url, clearUrl }) => {
   const [isPlusMenuVisible, setPlusMenuVisible] = useState(false);
   const [backgroundImage, setBackgroundImage] = useState(chatBack7);
   const [isTemaMenuVisible, setTemaMenuVisible] = useState(false);
@@ -579,7 +542,12 @@ const ChatMain = ({url, clearUrl}) => {
     const coupleName = sessionStorage.getItem("coupleName");
     coupleNickNameAxois(coupleName);
   }, []);
-
+  const clickTopBtn = () => {
+    navigate(-1);
+  };
+  const truncateRoomName = (name) => {
+    return name.length > 10 ? name.slice(0, 10) + "..." : name;
+  };
   return (
     <GlobalStyle>
       <Modal
@@ -592,30 +560,31 @@ const ChatMain = ({url, clearUrl}) => {
       >
         {modalContent}
       </Modal>
-      <Chatpage backgroundImage={backgroundImage}>
-        <TopDiv>
-          <TopText>{coupleNickName[1]} 의 채팅</TopText>
-          <TopName>채팅방 : {roomName}</TopName>
-          {/* <TopBtn onClick={clickTopBtn}>나가기</TopBtn> */}
-        </TopDiv>
-        <Textarea
-          ref={chatContainerRef}
-          isPlusMenuVisible={
-            isPlusMenuVisible || isTemaMenuVisible || isEmojiMenuVisible
-          }
-        >
-          {/* <MessageBox> */}
-          {chatList.map((chat, index) => (
-            <Message key={index} isSender={chat.sender === sender}>
-              {chat.chatData}
-              {chat.message}
-            </Message>
-          ))}
-          {/* </MessageBox> */}
-        </Textarea>
-        <PlusMenu isVisible={isPlusMenuVisible}>
-          <PlusMenuBtn>
-            {/* <label htmlFor="imageInput">
+      <BookWrapper>
+        <Chatpage backgroundImage={backgroundImage}>
+          <TopDiv>
+            <TopText>{coupleNickName[1]} 의 채팅</TopText>
+            <TopName>채팅방 : {truncateRoomName(roomName)}</TopName>
+            {/* <TopBtn onClick={clickTopBtn}>나가기</TopBtn> */}
+          </TopDiv>
+          <Textarea
+            ref={chatContainerRef}
+            isPlusMenuVisible={
+              isPlusMenuVisible || isTemaMenuVisible || isEmojiMenuVisible
+            }
+          >
+            {/* <MessageBox> */}
+            {chatList.map((chat, index) => (
+              <Message key={index} isSender={chat.sender === sender}>
+                {chat.chatData}
+                {chat.message}
+              </Message>
+            ))}
+            {/* </MessageBox> */}
+          </Textarea>
+          <PlusMenu isVisible={isPlusMenuVisible}>
+            <PlusMenuBtn>
+              {/* <label htmlFor="imageInput">
               <FaRegImage className="icon 이미지사진" />
             </label>
             <input
@@ -625,95 +594,99 @@ const ChatMain = ({url, clearUrl}) => {
               style={{ display: "none" }}
               onChange={handleImageUpload}
             /> */}
-            <TbWallpaper className="icon 톱니" onClick={toggleTemaMenu} />
-            <MdEmojiEmotions className="icon 임티" onClick={toggleEmojiMenu} />
-            <MdDelete className="방삭제" onClick={handleRoomDeleteClick} />
-          </PlusMenuBtn>
-        </PlusMenu>
-        <TemaMenu isVisible={isTemaMenuVisible}>
-          <img
-            src={chatBack1}
-            alt="테마1"
-            onClick={() => handleTemaClick(chatBack1)}
-          />
-          <img
-            src={chatBack2}
-            alt="테마2"
-            onClick={() => handleTemaClick(chatBack2)}
-          />
-          <img
-            src={chatBack3}
-            alt="테마3"
-            onClick={() => handleTemaClick(chatBack3)}
-          />
-          <img
-            src={chatBack4}
-            alt="테마3"
-            onClick={() => handleTemaClick(chatBack4)}
-          />
-          <img
-            src={chatBack5}
-            alt="테마4"
-            onClick={() => handleTemaClick(chatBack5)}
-          />
-          <img
-            src={chatBack6}
-            alt="테마3"
-            onClick={() => handleTemaClick(chatBack6)}
-          />
-          <img
-            src={chatBack7}
-            alt="테마3"
-            onClick={() => handleTemaClick(chatBack7)}
-          />
-          <img
-            src={chatBack8}
-            alt="테마3"
-            onClick={() => handleTemaClick(chatBack8)}
-          />
-          <img
-            src={chatBack9}
-            alt="테마9"
-            onClick={() => handleTemaClick(chatBack9)}
-          />
-        </TemaMenu>
-        <EmojiMenu isVisible={isEmojiMenuVisible}>
-          <EmojiIcon>
-            <BsEmojiHeartEyes />
-          </EmojiIcon>
-          <EmojiIcon>
-            <BsEmojiAngry></BsEmojiAngry>
-          </EmojiIcon>
-          <EmojiIcon>
-            <BsEmojiAstonished />
-          </EmojiIcon>
-          <EmojiIcon>
-            <BsEmojiFrown />
-          </EmojiIcon>
-          <EmojiIcon>
-            <BsEmojiDizzy />
-          </EmojiIcon>
-          <EmojiIcon>
-            <BsEmojiExpressionless />
-          </EmojiIcon>
-          <EmojiIcon>
-            <BsEmojiGrin />
-          </EmojiIcon>
-        </EmojiMenu>
-        <InputText>
-          <button className="plus" onClick={togglePlusMenu}></button>
-          <input
-            type="text"
-            value={inputMsg}
-            onChange={onChangMsg}
-            placeholder="메시지를 입력하세요"
-            onKeyUp={onEnterKey}
-          />
-          <button className="send" onClick={onClickMsgSend}>
-            <FaHeart className="heart" />
-          </button>
-        </InputText>
-      </Chatpage>
+              <TbWallpaper className="icon 톱니" onClick={toggleTemaMenu} />
+              <MdEmojiEmotions
+                className="icon 임티"
+                onClick={toggleEmojiMenu}
+              />
+              <MdDelete className="방삭제" onClick={handleRoomDeleteClick} />
+            </PlusMenuBtn>
+          </PlusMenu>
+          <TemaMenu isVisible={isTemaMenuVisible}>
+            <img
+              src={chatBack1}
+              alt="테마1"
+              onClick={() => handleTemaClick(chatBack1)}
+            />
+            <img
+              src={chatBack2}
+              alt="테마2"
+              onClick={() => handleTemaClick(chatBack2)}
+            />
+            <img
+              src={chatBack3}
+              alt="테마3"
+              onClick={() => handleTemaClick(chatBack3)}
+            />
+            <img
+              src={chatBack4}
+              alt="테마3"
+              onClick={() => handleTemaClick(chatBack4)}
+            />
+            <img
+              src={chatBack5}
+              alt="테마4"
+              onClick={() => handleTemaClick(chatBack5)}
+            />
+            <img
+              src={chatBack6}
+              alt="테마3"
+              onClick={() => handleTemaClick(chatBack6)}
+            />
+            <img
+              src={chatBack7}
+              alt="테마3"
+              onClick={() => handleTemaClick(chatBack7)}
+            />
+            <img
+              src={chatBack8}
+              alt="테마3"
+              onClick={() => handleTemaClick(chatBack8)}
+            />
+            <img
+              src={chatBack9}
+              alt="테마9"
+              onClick={() => handleTemaClick(chatBack9)}
+            />
+          </TemaMenu>
+          <EmojiMenu isVisible={isEmojiMenuVisible}>
+            <EmojiIcon>
+              <BsEmojiHeartEyes />
+            </EmojiIcon>
+            <EmojiIcon>
+              <BsEmojiAngry></BsEmojiAngry>
+            </EmojiIcon>
+            <EmojiIcon>
+              <BsEmojiAstonished />
+            </EmojiIcon>
+            <EmojiIcon>
+              <BsEmojiFrown />
+            </EmojiIcon>
+            <EmojiIcon>
+              <BsEmojiDizzy />
+            </EmojiIcon>
+            <EmojiIcon>
+              <BsEmojiExpressionless />
+            </EmojiIcon>
+            <EmojiIcon>
+              <BsEmojiGrin />
+            </EmojiIcon>
+          </EmojiMenu>
+          <InputText>
+            <button className="plus" onClick={togglePlusMenu}></button>
+            <input
+              type="text"
+              value={inputMsg}
+              onChange={onChangMsg}
+              placeholder="메시지를 입력하세요"
+              onKeyUp={onEnterKey}
+            />
+            <button className="send" onClick={onClickMsgSend}>
+              <FaHeart className="heart" />
+            </button>
+          </InputText>
+        </Chatpage>
+      </BookWrapper>
     </GlobalStyle>
   );
 };
