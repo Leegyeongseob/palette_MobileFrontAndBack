@@ -4,8 +4,10 @@ import "moment/locale/ko"; // 한글 로컬라이제이션
 moment.locale("ko"); // 한글 설정 적용
 
 const Common = {
-  PALLETE_DOMAIN: "https://www.palette-mobile.store",
-  PALETTE_SOCKET_URL: "wss://www.palette-mobile.store/ws/chat",
+  // PALLETE_DOMAIN: "https://www.palette-mobile.store",
+  // PALETTE_SOCKET_URL: "wss://www.palette-mobile.store/ws/chat",
+  PALLETE_DOMAIN: "http://localhost:8222",
+  PALETTE_SOCKET_URL: "ws://localhost:8222/ws/chat",
 
   timeFromNow: (timestamp) => {
     return moment(timestamp).fromNow();
