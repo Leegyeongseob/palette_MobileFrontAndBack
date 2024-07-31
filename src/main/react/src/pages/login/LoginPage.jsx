@@ -7,13 +7,14 @@ import { FcGoogle } from "react-icons/fc";
 import naver from "../../img/loginImg/naver.png";
 import kakao from "../../img/loginImg/kakako.png";
 import { SiGnuprivacyguard } from "react-icons/si";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LoginAxios from "../../axiosapi/LoginAxios";
 import Common from "../../common/Common";
 import Modal from "../datediary/Modal";
 import GoogleAndNaverNotLogin from "../../img/loginImg/구글,네이버 간편 로그인.gif";
 import LoginModal from "../../common/utils/Modal";
 import LetterOpenImg from "../../img/background/mobile/편지봉투3.jpg";
+import KakaoLogin from "react-kakao-login";
 
 const Contain = styled.div`
   width: 100%;
@@ -226,6 +227,9 @@ const NaverIcon = styled.div`
   cursor: pointer;
 `;
 
+const HiddenKakaoLogin = styled(KakaoLogin)`
+  display: none;
+`;
 const KakaoIcon = styled.div`
   width: 100%;
   height: 100%;
@@ -340,16 +344,10 @@ const LoginPage = () => {
     }
   };
   //카카오 간편 로그인 이벤트 함수
-  const kakaoLoginOnClick = () => {
-    // 직접 구현
-    const kakaoAuthorizeAxios = async () => {
-      const REST_API_KEY = process.env.REACT_APP_KAKAO_API_KEY;
-      const REDIRECT_URI = process.env.REACT_APP_KAKAO_REDIRECT_URI;
-      const KAKAO_PATH = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`;
-
-      window.location.href = KAKAO_PATH;
+  const kakaoLoginOnClick = (onClick) => {
+    return () => {
+      if (onClick) onClick();
     };
-    kakaoAuthorizeAxios();
   };
   const codeModalOkBtnHandler = () => {
     closeModal();
@@ -360,6 +358,73 @@ const LoginPage = () => {
     setIsModalImg(true);
     setModalImg(GoogleAndNaverNotLogin);
     setModalContent("서비스를 지원하지 않습니다. 카카오 서비스만 지원합니다.");
+  };
+  // 카카오 로그인 관련
+  const kakaoKey = "c9e9cea7eb437083937aae8d490b9853"; // 카카오 개발자 사이트에서 복사한 JavaScript 키
+
+  useEffect(() => {
+    if (!window.Kakao.isInitialized()) {
+      window.Kakao.init(kakaoKey);
+    }
+  }, [kakaoKey]);
+
+  const responseKakao = (response) => {
+    console.log(response);
+    KaKaoData(response);
+  };
+  const KaKaoData = async (response) => {
+    try {
+      const propsToPass = {
+        kakaoProp: true,
+        kakaoEmail: response.profile.kakao_account.email,
+        kakaopwd: response.profile.id,
+        kakaoName: response.profile.properties.nickname,
+        kakaoImgUrl: response.profile.properties.profile_image,
+      };
+      console.log("kakaoEmail:" + propsToPass.kakaoEmail);
+      console.log("kakaopwd:" + propsToPass.kakaopwd);
+      console.log("kakaoName:" + propsToPass.kakaoName);
+      console.log("kakaoImgUrl:" + propsToPass.kakaoImgUrl);
+      //이메일 존재하는지 확인하는 부분
+      const emailExist = await LoginAxios.emailIsExist(propsToPass.kakaoEmail);
+      console.log("emailExist:" + emailExist.data);
+
+      //이메일 존재하면 화면이동
+      if (emailExist.data) {
+        //엑세스 토큰 작업
+        const res = await LoginAxios.login(
+          propsToPass.kakaoEmail,
+          propsToPass.kakaopwd
+        );
+        console.log("accessToken : ", res.data.accessToken);
+        console.log("refreshToken : ", res.data.refreshToken);
+        Common.setAccessToken(res.data.accessToken);
+        Common.setRefreshToken(res.data.refreshToken);
+        sessionStorage.setItem("email", propsToPass.kakaoEmail);
+        sessionStorage.setItem("kakaoImgUrl", propsToPass.kakaoImgUrl);
+        //이메일로 커플이름 찾는 비동기 함수
+        const coupleNameSearchAxios = async (email) => {
+          console.log(email);
+          const resCoupleName = await LoginAxios.emailToCoupleNameSearch(email);
+          console.log(resCoupleName.data);
+          // `coupleName`을 `sessionStorage`에 저장합니다.
+          sessionStorage.setItem("coupleName", resCoupleName.data);
+          navigate(`/main-page`);
+        };
+        coupleNameSearchAxios(propsToPass.kakaoEmail);
+      }
+      //아니면 여기로 이동
+      else {
+        console.log("else문까지는 와요!");
+        console.log("Navigating to sign-up page with props:", propsToPass);
+        navigate(`/signup-page`, { state: propsToPass });
+      }
+    } catch (error) {
+      console.error("Error during Kakao login:", error);
+    }
+  };
+  const onFail = (error) => {
+    console.error(error);
   };
   return (
     <Contain>
@@ -387,19 +452,20 @@ const LoginPage = () => {
         <Icon />
       </IconDiv>
       <LoginDiv>
-        <InputContainer>
-          <IconWrapper>
-            <MdOutlineMailOutlineStyle />
-          </IconWrapper>
-          <InputDiv
-            type="text"
-            placeholder="Email ID"
-            value={inputEmail}
-            onChange={onChangeEmail}
-          />
-        </InputContainer>
-        {inputEmail && <Message isCorrect={isId}>{idMessage}</Message>}
-
+        <>
+          <InputContainer>
+            <IconWrapper>
+              <MdOutlineMailOutlineStyle />
+            </IconWrapper>
+            <InputDiv
+              type="text"
+              placeholder="Email ID"
+              value={inputEmail}
+              onChange={onChangeEmail}
+            />
+          </InputContainer>
+          {inputEmail && <Message isCorrect={isId}>{idMessage}</Message>}
+        </>
         <InputContainer>
           <IconWrapper>
             <MdLockOutlineStyled />
@@ -414,19 +480,22 @@ const LoginPage = () => {
         </InputContainer>
       </LoginDiv>
       <FindDiv>
-        <Link to="/signup-page" style={{ textDecoration: "none" }}>
-          <SigninDiv>
-            <SiGnuprivacyguardStyle />
-            <Signin>&nbsp;Sign in</Signin>
-          </SigninDiv>
-        </Link>
-
-        <Link to="/find-email" style={{ textDecoration: "none" }}>
-          <ForgotId>Forgot ID</ForgotId>
-        </Link>
-        <Link to="/find-password" style={{ textDecoration: "none" }}>
-          <ForgotPassword>Password?</ForgotPassword>
-        </Link>
+        <>
+          <Link to="/signup-page" style={{ textDecoration: "none" }}>
+            <SigninDiv>
+              <SiGnuprivacyguardStyle />
+              <Signin>&nbsp;Sign in</Signin>
+            </SigninDiv>
+          </Link>
+        </>
+        <>
+          <Link to="/find-email" style={{ textDecoration: "none" }}>
+            <ForgotId>Forgot ID</ForgotId>
+          </Link>
+          <Link to="/find-password" style={{ textDecoration: "none" }}>
+            <ForgotPassword>Password?</ForgotPassword>
+          </Link>
+        </>
       </FindDiv>
       <SimpleLogin>
         <div>
@@ -437,7 +506,16 @@ const LoginPage = () => {
             <NaverIcon onClick={() => modalClickHandler()} />
           </CircleSide>
           <CircleSide>
-            <KakaoIcon onClick={kakaoLoginOnClick} />
+            <HiddenKakaoLogin
+              token={kakaoKey}
+              onSuccess={responseKakao}
+              onFail={onFail}
+              throughTalk={false} // 추가된 옵션: 브라우저를 통해 로그인을 시도
+              getProfile={true}
+              render={({ onClick }) => (
+                <KakaoIcon onClick={kakaoLoginOnClick(onClick)} />
+              )}
+            />
           </CircleSide>
         </div>
       </SimpleLogin>

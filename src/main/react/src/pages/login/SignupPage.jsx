@@ -556,9 +556,6 @@ const SignupPage = () => {
         kakaoLogin(kakaoEmail, kakaopwd);
         sessionStorage.setItem("kakaoImgUrl", kakaoImgUrl);
         coupleNameSearch(kakaoEmail);
-        //로그인 하는 부분
-        if (sessionStorage.getItem("email"))
-          navigate(`/${inputCoupleName}/main-page`);
       }
     } catch (error) {
       console.log(error);
@@ -592,14 +589,11 @@ const SignupPage = () => {
       if (response.data.grantType === "bearer") {
         console.log("이거 : " + kakoEmailvalue);
         console.log("제발 : " + kakaoPwdValue);
-        const response = await LoginAxios.login(kakoEmailvalue, kakaoPwdValue);
         console.log("accessToken : ", response.data.accessToken);
         console.log("refreshToken : ", response.data.refreshToken);
         Common.setAccessToken(response.data.accessToken);
         Common.setRefreshToken(response.data.refreshToken);
         sessionStorage.setItem("email", kakoEmailvalue);
-
-        navigate(`/main-page`);
       } else {
         setModalOpen(true);
         SetHeaderContents("로그인 에러");
