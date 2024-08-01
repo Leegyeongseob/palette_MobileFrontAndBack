@@ -91,20 +91,23 @@ const PaymentComponent = ({ onPaymentSuccess, amount, order }) => {
         setModalText("결제를 취소하였습니다.");
       } else {
         // 결제가 성공한 경우
-        const notified = await fetch(`http://localhost:5000/payment/complete`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            paymentId: response.paymentId,
-            orderName: orderName,
-            totalAmount: totalAmount,
-            customer: customer,
-            // 추가적인 주문 정보를 여기에 전달
-          }),
-        });
+        const notified = await fetch(
+          `${Common.PALLETE_DOMAIN}:5000/payment/complete`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              paymentId: response.paymentId,
+              orderName: orderName,
+              totalAmount: totalAmount,
+              customer: customer,
+              // 추가적인 주문 정보를 여기에 전달
+            }),
+          }
+        );
 
         if (notified.ok) {
           setModalOpen(true);

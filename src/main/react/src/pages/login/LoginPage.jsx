@@ -164,7 +164,7 @@ const ButtonDiv = styled.div`
 
 const LoginButton = styled.div`
   width: 180px;
-  height: 50px;
+  height: calc(10px + 5vh);
   background-color: ${({ isActive }) =>
     isActive ? "rgba(0, 0, 0, 0.4)" : "rgba(0, 0, 0, 0.1)"};
   border-radius: 25px;

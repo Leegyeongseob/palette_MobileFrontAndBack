@@ -58,23 +58,24 @@ const InputDetailDiv = styled.div`
   & > .InputCoupleName,
   & > .InputCode {
     width: 50%;
-    height: 100%;
+    height: 70%;
     border-radius: 0.521vw;
     border: none;
     background-color: rgba(0, 0, 0, 0.3);
     outline: none;
     box-shadow: 0 6px 9px rgba(0, 0, 0, 0.3);
-    padding-left: 0.521vw;
+    padding-left: 5px;
     font-size: 14px;
     font-weight: 600;
   }
 `;
 const Empty = styled.div`
   width: 2%;
+  height: 2vh;
 `;
 const EmailAthouized = styled.div`
   width: 12%;
-  height: 25px;
+  height: 70%;
   border-radius: 10px;
   border: none;
   background-color: ${({ isActive }) =>
@@ -119,19 +120,19 @@ const CoupleEmailAthouized = styled.div`
 `;
 const RegisterationInput1 = styled.input`
   width: 22%;
-  height: 100%;
+  height: 70%;
   border-radius: 0.521vw;
   border: none;
   background-color: rgba(0, 0, 0, 0.3);
   outline: none;
   box-shadow: 0 6px 9px rgba(0, 0, 0, 0.3);
-  padding-left: 0.521vw;
+  padding-left: 5px;
   font-size: 14px;
   font-weight: 600;
 `;
 const Text = styled.div`
   width: 3%;
-  height: 100%;
+  height: 70%;
   font-weight: bolder;
   font-size: 15px;
   color: #b44a4a;
@@ -141,13 +142,13 @@ const Text = styled.div`
 `;
 const RegisterationInput2 = styled.input`
   width: 7%;
-  height: 100%;
+  height: 70%;
   border-radius: 0.521vw;
   border: none;
   background-color: rgba(0, 0, 0, 0.3);
   outline: none;
   box-shadow: 0 6px 9px rgba(0, 0, 0, 0.3);
-  padding-left: 0.208vw;
+  padding-left: 5px;
   font-size: 14px;
   font-weight: 600;
 `;
@@ -185,10 +186,22 @@ const SignupButton = styled.div`
   }
 `;
 const InputDetailDiv2 = styled.div`
-  width: 100%;
-  height: 5%;
+  width: 30%;
+  height: 10%;
   display: flex;
   justify-content: center;
+
+  & > .lookBtn {
+    width: 40%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  & > .lookBtn > div {
+    width: 80%;
+    height: 90%;
+  }
 `;
 const Message = styled.div`
   width: 100%;
@@ -941,9 +954,11 @@ const SignupPage = () => {
         <InputDetailDiv2>
           <CoupleText>약관 보기</CoupleText>
           <Empty />
-          <EmailAthouized isActive={true} onClick={handleTermLookBtnClick}>
-            보기
-          </EmailAthouized>
+          <div className="lookBtn">
+            <EmailAthouized isActive={true} onClick={handleTermLookBtnClick}>
+              보기
+            </EmailAthouized>
+          </div>
         </InputDetailDiv2>
         <TermImgDiv isOpen={isTermClickBtn}>
           <TermsForm>
@@ -1011,6 +1026,7 @@ const SignupPage = () => {
           </TermsForm>
         </TermImgDiv>
       </InputDiv>
+      <Empty />
       {kakaoProp ? (
         <ButtonDiv>
           <SignupButton
