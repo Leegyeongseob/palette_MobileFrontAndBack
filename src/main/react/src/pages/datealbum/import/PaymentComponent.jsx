@@ -93,7 +93,7 @@ const PaymentComponent = ({ onPaymentSuccess, amount, order }) => {
       } else {
         // 결제가 성공한 경우
         const notified = await fetch(
-          `${Common.PALLETE_DOMAIN}:5000/payment/complete`,
+          `https://www.palette-mobile.store/payment/complete`,
           {
             method: "POST",
             headers: {

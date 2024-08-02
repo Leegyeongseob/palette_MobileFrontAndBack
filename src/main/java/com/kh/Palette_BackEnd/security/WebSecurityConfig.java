@@ -51,7 +51,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .antMatchers("/","/auth/**","/main/**","/wss/**","/chat/**","/static/**","/date-clothes/**","/clothes/**","https://developers.kakao.com/","/font/**,*/member/**","/ws/**").permitAll()
                 .antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**", "/sign-api/exception","/mapmarker/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/favicon.ico","/manifest.json","/logo192.png","/kakaoLogin","/HancomSans-Light_0.ttf").permitAll()
+                .antMatchers("/favicon.ico","/manifest.json","/logo192.png","/kakaoLogin","/static/font/HancomSans-Light_0.ttf").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider))
@@ -64,8 +64,8 @@ public class WebSecurityConfig implements WebMvcConfigurer {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        // config.addAllowedOrigin("https://www.palette-mobile.store");
-        config.addAllowedOrigin("http://localhost:8222");
+        config.addAllowedOrigin("https://www.palette-mobile.store");
+        // config.addAllowedOrigin("http://localhost:8222");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
