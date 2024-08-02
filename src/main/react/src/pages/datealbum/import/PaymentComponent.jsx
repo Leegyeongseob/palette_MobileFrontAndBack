@@ -4,6 +4,7 @@ import styled from "styled-components";
 import modalImg from "../../../img/commonImg/전구 아이콘.gif";
 import Modal from "../../datediary/Modal";
 import AlbumAxiosApi from "../../../axiosapi/AlbumAxiosApi";
+import Common from "../../../common/Common";
 // import AxiosApi from "../../../axiosapi/AlbumAxiosApi";
 
 const BuyButton = styled.div`
