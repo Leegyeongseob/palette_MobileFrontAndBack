@@ -79,4 +79,9 @@ public class AuthController {
     public ResponseEntity<String> fondPwdResult(@RequestBody FindPwdDto findPwdDto){
         return ResponseEntity.ok(authService.findPwdResult(findPwdDto));
     }
+     //이미 커플이 완성되어 있는지 확인.
+     @GetMapping("isExistCouple")
+     public ResponseEntity<Boolean> isExistCouple(@RequestParam String coupleName){
+         return ResponseEntity.ok(authService.isExistCouple(coupleName));
+     }
 }
