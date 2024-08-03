@@ -5,6 +5,7 @@ import com.kh.Palette_BackEnd.entity.ChatRoomEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -13,4 +14,6 @@ public interface ChatRepository extends JpaRepository<ChatEntity, Long> {
     List<ChatEntity> findBySenderAndReceiverOrReceiverAndSenderOrderByRegDateAsc(String sender1, String receiver1, String sender2, String receiver2);
 
     List<ChatEntity> findByChatRoom(ChatRoomEntity roomId);
+    void deleteByRegDateBefore(LocalDateTime cutoffDate);
+    void deleteByChatRoom_RoomId(String roomId);
 }

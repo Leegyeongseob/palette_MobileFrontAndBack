@@ -162,16 +162,16 @@ const DdayCoupleName = styled.div`
 `;
 
 const NextButton = styled.div`
-  width: 40px;
-  height: 20px;
+  width: 50px;
+  height: 25px;
   font-size: 0.7rem;
   border: none;
-  border-radius: 0.6rem;
-  background-color: darkgray;
-  color: #272727;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 0.6rem;
+  background-color: #ffd2c2;;
+  color: #272727;
   cursor: pointer;
   &:hover {
     color: #ff6750;
