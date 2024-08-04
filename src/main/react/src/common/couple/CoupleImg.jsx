@@ -132,13 +132,13 @@ const CoupleImg = ({ clothes = false }) => {
   //카카오 프로필 사진저장 비동기 함수
   const kakaoProfileImgAxios = async (emailvalue, kakaoProfile) => {
     const res = await MemberAxiosApi.profileUrlSave(emailvalue, kakaoProfile);
-    if ((kakaoProfileUrl !==null && kakaoProfile !=="")&& res.data) {
+    if (kakaoProfileUrl !== null && kakaoProfile !== "" && res.data) {
       setImgUrl(kakaoProfile);
     }
   };
   useEffect(() => {
     const fetchData = async () => {
-      if (kakaoProfileUrl !==null && kakaoProfileUrl !=="") {
+      if (kakaoProfileUrl !== null && kakaoProfileUrl !== "") {
         await kakaoProfileImgAxios(email, kakaoProfileUrl);
       }
       const getCoupleName = await MemberAxiosApi.renderCoupleNameSearch(email);
@@ -184,7 +184,7 @@ const CoupleImg = ({ clothes = false }) => {
             coupleNickNameAxios(firstEmail),
             coupleProfileAxios(coupleNameData, email),
           ]);
-          console.log("isMyHome 상태 확인:",isMyHome);
+          console.log("isMyHome 상태 확인:", isMyHome);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -209,7 +209,7 @@ const CoupleImg = ({ clothes = false }) => {
       console.log("File uploaded successfully!");
 
       // 이전 이미지가 있는 경우 삭제
-      if (imgUrl && imgUrl !=="") {
+      if (imgUrl && imgUrl !== "") {
         try {
           const oldFileRef = ref(profileStorage, imgUrl);
           await deleteObject(oldFileRef);
@@ -261,15 +261,36 @@ const CoupleImg = ({ clothes = false }) => {
       // 이미지가 존재하는 확인
       const existUrl = await MemberAxiosApi.searchProfileUrl(email);
       console.log("내 프로필 이미지:", existUrl.data);
-      if (existUrl.data === null && res.data === "Man") {
+      const isCoupleTrue = await MemberAxiosApi.isCoupleTrue(coupleName);
+      if (
+        (existUrl.data === null ||
+          existUrl.data === "" ||
+          existUrl.data === "notExist") &&
+        res.data === "Man"
+      ) {
         const resMan = await MemberAxiosApi.profileUrlSave(email, manprofile);
+
         console.log(resMan.data);
-      } else if (existUrl.data === null && res.data === "Waman") {
+      } else if (
+        (existUrl.data === null ||
+          existUrl.data === "" ||
+          existUrl.data === "notExist") &&
+        res.data === "Woman"
+      ) {
         const resWoman = await MemberAxiosApi.profileUrlSave(
           email,
           womanprofile
         );
+        if (!isCoupleTrue.data) {
+          sessionStorage.setItem("myDarling", manprofile);
+        }
         console.log(resWoman.data);
+      }
+      if (!isCoupleTrue.data && res.data === "Man") {
+        sessionStorage.setItem("myDarling", womanprofile);
+      }
+      if (!isCoupleTrue.data && res.data === "Woman") {
+        sessionStorage.setItem("myDarling", manprofile);
       }
     } catch (error) {
       console.error(

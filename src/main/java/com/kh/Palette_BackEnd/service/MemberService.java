@@ -247,10 +247,15 @@ public class MemberService {
         Optional<MemberEntity> memberEntityOpt = memberRepository.findByEmail(email);
         if(memberEntityOpt.isPresent()){
             MemberEntity member = memberEntityOpt.get();
-            return member.getProfileImgUrl();
+            if(member.getProfileImgUrl() != null){
+                return member.getProfileImgUrl();
+            }
+            else{
+                return "notExist";
+            }
         }
         else{
-            return null;
+            return "notExist";
         }
     }
 }
