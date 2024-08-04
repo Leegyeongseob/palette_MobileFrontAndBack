@@ -64,8 +64,8 @@ public class WebSecurityConfig implements WebMvcConfigurer {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("https://www.palette-mobile.store");
-        // config.addAllowedOrigin("http://localhost:8222");
+//        config.addAllowedOrigin("https://www.palette-mobile.store");
+         config.addAllowedOrigin("http://localhost:8222");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
