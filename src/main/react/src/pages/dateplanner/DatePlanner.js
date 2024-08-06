@@ -57,13 +57,17 @@ const BookWrapper = styled.div`
 const LBookContainer = styled.div`
   width: 92vw;
   height: 75vh;
+  position: absolute;
   border: 1px solid #696969;
   background-color: #fff9f2;
   /* background-image: url(${theme6});
   background-size: cover; */
   display: flex;
   justify-content: space-between;
+  z-index: 3;
   border-radius: 5px;
+  opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
+  pointer-events: ${({ isVisible }) => (isVisible ? "auto" : "none")};
 `;
 
 const BookTheme2 = styled.div`
@@ -145,7 +149,7 @@ const DatePlanner = ({ url, clearUrl }) => {
   const currentOverlayRef = useRef(null); // CustomOverlay 상태를 useRef로 관리
   console.log("coupleName : ", coupleName);
   // 버튼 상태 변수
-  const [nextBtn, setNextBtn] = useState(false);
+  const [isOverlayVisible, setIsOverlayVisible] = useState(false);
   const settings = {
     dots: true,
     infinite: false,
@@ -397,7 +401,7 @@ const DatePlanner = ({ url, clearUrl }) => {
   };
   return (
     <BookWrapper>
-      {!nextBtn && (
+     
         <BookTheme2>
           <BookSign2>
             <RBookContainer>
@@ -423,17 +427,17 @@ const DatePlanner = ({ url, clearUrl }) => {
               />
             </RBookContainer>
             <NextBtn
-              onClick={() => {
-                setNextBtn(true);
-              }}
-            >
-              다음
-            </NextBtn>
+            onClick={() => {
+              setIsOverlayVisible(true);
+            }}
+          >
+            다음
+          </NextBtn>
           </BookSign2>
         </BookTheme2>
-      )}
-      {nextBtn && (
-        <LBookContainer>
+    
+      
+        <LBookContainer  isVisible={isOverlayVisible}>
           <BookSign>
             <PlannerForm
               title={title}
@@ -453,15 +457,15 @@ const DatePlanner = ({ url, clearUrl }) => {
               openModal={(index) => openModal(index)}
             />
             <NextBtn
-              onClick={() => {
-                setNextBtn(false);
-              }}
-            >
-              이전
-            </NextBtn>
+            onClick={() => {
+              setIsOverlayVisible(false);
+            }}
+          >
+            이전
+          </NextBtn>
           </BookSign>
         </LBookContainer>
-      )}
+   
 
       <MapModal
         isOpen={isModalOpen}
