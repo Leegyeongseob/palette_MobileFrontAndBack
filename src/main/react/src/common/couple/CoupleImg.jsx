@@ -152,15 +152,12 @@ const CoupleImg = ({ clothes = false }) => {
     fetchData();
   }, []);
   const coupleNickNameAxios = async (emailData) => {
-    console.log("emailData : " + emailData);
     const resCouple = await MemberAxiosApi.renderCoupleNameSearch(emailData);
-    console.log("이거 :" + resCouple.data);
     const resNickName = await MainAxios.searchNickName(
       emailData,
       resCouple.data
     );
     setCoupleNickName(resNickName.data);
-    console.log("커플닉네임 확인:" + resNickName.data);
   };
   //세션 커플이름이 바뀌었을 경우
   useEffect(() => {
@@ -170,8 +167,6 @@ const CoupleImg = ({ clothes = false }) => {
           email
         );
         // 방문했을 경우에만 해당 로직을 수행합니다.
-        console.log("본인의 커플이름 :" + getCoupleName.data);
-        console.log("현재 커플 이름:" + coupleNameData);
         if (getCoupleName.data !== coupleNameData) {
           setIsMyHome(false);
           // 커플이름에 해당하는 첫 번째 이메일을 검색하고 저장합니다.
@@ -184,7 +179,6 @@ const CoupleImg = ({ clothes = false }) => {
             coupleNickNameAxios(firstEmail),
             coupleProfileAxios(coupleNameData, email),
           ]);
-          console.log("isMyHome 상태 확인:", isMyHome);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -196,7 +190,6 @@ const CoupleImg = ({ clothes = false }) => {
   //파일 업로드 이벤트 함수
   const AddImgBtnOnChangeHandler = (e) => {
     const selectedFile = e.target.files[0];
-    console.log("파일 경로 : ", selectedFile);
     // 선택된 파일을 즉시 업로드 후 DB에 다시 저장
     handleFileUpload(email, selectedFile);
   };
@@ -240,9 +233,6 @@ const CoupleImg = ({ clothes = false }) => {
       coupleNameData,
       emailData
     );
-    console.log("CoupleNameData좀 보자", coupleNameData);
-    console.log("emailData보자", emailData);
-    console.log("커플 두사람의 profileImgUrl:", res.data);
     if (res.data[0]) {
       setImgUrl(res.data[0]);
       sessionStorage.setItem("imgUrl", res.data[0]);
@@ -257,10 +247,8 @@ const CoupleImg = ({ clothes = false }) => {
     try {
       // 사용자의 성별 가져오기
       const res = await MainAxios.mySexSearch(email);
-      console.log("Sex:", res.data);
       // 이미지가 존재하는 확인
       const existUrl = await MemberAxiosApi.searchProfileUrl(email);
-      console.log("내 프로필 이미지:", existUrl.data);
       const isCoupleTrue = await MemberAxiosApi.isCoupleTrue(coupleName);
       if (
         (existUrl.data === null ||
@@ -269,7 +257,6 @@ const CoupleImg = ({ clothes = false }) => {
         res.data === "Man"
       ) {
         const resMan = await MemberAxiosApi.profileUrlSave(email, manprofile);
-
         console.log(resMan.data);
       } else if (
         (existUrl.data === null ||

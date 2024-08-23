@@ -454,9 +454,6 @@ const MainPage = () => {
   useEffect(() => {
     fetchBoardDataCN();
   }, []);
-  useEffect(() => {
-    console.log(gallaryImg);
-  }, [gallaryImg]);
   //커플 이름 검색
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -468,12 +465,6 @@ const MainPage = () => {
     const coupleNameData = searchCoupleList[index];
     if (coupleNameData) {
       sessionStorage.setItem("coupleName", coupleNameData);
-      console.log(
-        "오픈북 검색창 searchTerm",
-        searchTerm,
-        " coupleName",
-        coupleNameData
-      );
       setSearchTerm(""); // 필요시 네비게이션 후 검색어 초기화
       navigate(`/main-page`);
     }
@@ -499,7 +490,6 @@ const MainPage = () => {
     const coupleName = await MemberAxiosApi.renderCoupleNameSearch(email);
     // Dday값 가져오기
     const resDday = await MainAxios.searchDday(coupleName.data);
-    console.log(resDday.data);
     if (resDday.data !== "") {
       setIsDday(true);
       setSaveDday(resDday.data);
@@ -509,11 +499,9 @@ const MainPage = () => {
   };
   // 게시물 가져오기
   const fetchBoardDataCN = async () => {
-    console.log(coupleName);
     try {
       const data = await BoardAxios.getCoupleName(coupleName);
       setBoardSaveData(data.data);
-      console.log("axios 데이터", data.data);
     } catch (error) {
       console.error("Failed to fetch board data", error);
     }

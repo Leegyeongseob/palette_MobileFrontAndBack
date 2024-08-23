@@ -388,7 +388,6 @@ const ChatMain = ({ url, clearUrl }) => {
     const coupleEmailAxios = async () => {
       try {
         const rsp = await ChatAxiosApi.coupleEmail(email);
-        console.log(rsp.data);
         setSender(rsp.data[0]);
         setReceiver(rsp.data[1]);
       } catch (error) {
@@ -401,7 +400,6 @@ const ChatMain = ({ url, clearUrl }) => {
   const getPastMessages = async () => {
     try {
       const rsp = await ChatAxiosApi.pastChatDetail(roomId);
-      console.log("채팅 데이터 보자", rsp.data);
       setChatList(rsp.data);
     } catch (e) {
       console.log(e);
@@ -414,14 +412,12 @@ const ChatMain = ({ url, clearUrl }) => {
       try {
         const rsp = await ChatAxiosApi.chatDetail(roomId);
         setRoomName(rsp.data.name);
-        console.log(rsp.data.chatData);
       } catch (e) {
         if (e.rsp.status === 401) {
           await Common.handleUnauthorized();
           const newToken = Common.getAccessToken();
           if (newToken !== accessToken) {
             const rsp = await ChatAxiosApi.chatDetail(roomId);
-            console.log(rsp.data.name);
             setRoomName(rsp.data.name);
           }
         }
@@ -433,7 +429,6 @@ const ChatMain = ({ url, clearUrl }) => {
   }, []);
 
   useEffect(() => {
-    // console.log("방번호 : " + roomId);
     if (!ws.current) {
       ws.current = new WebSocket(Common.PALETTE_SOCKET_URL);
       ws.current.onopen = () => {
@@ -467,7 +462,6 @@ const ChatMain = ({ url, clearUrl }) => {
 
   const chatContainerRef = useRef(null);
 
-  // console.log(chatList);
 
   const togglePlusMenu = () => {
     setPlusMenuVisible(!isPlusMenuVisible);

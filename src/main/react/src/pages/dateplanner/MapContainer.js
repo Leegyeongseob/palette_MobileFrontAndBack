@@ -166,7 +166,6 @@ const MapContainer = ({
 
   const placesSearchCB = (data, status) => {
     if (status === window.kakao.maps.services.Status.OK) {
-      console.log(data);
       setPlaces(data);
       displayPlaces(data);
     } else {
@@ -228,7 +227,6 @@ const MapContainer = ({
   }, [currCategory]);
 
   const handleSubmit = (e) => {
-    console.log("테스트", handleSubmit);
 
     e.preventDefault();
     const keyword = e.target.elements.keyword.value.trim();

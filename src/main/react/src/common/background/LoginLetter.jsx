@@ -178,7 +178,6 @@ const LoginLetter = ({ notLoginState }) => {
           // 모달
           soloModal();
           setSession();
-          console.log("솔로는 웁니다.");
         }
       } else {
         // 커플이 아닌 경우

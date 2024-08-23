@@ -90,8 +90,6 @@ const CoupleImg = () => {
           email
         );
         // 방문했을 경우에만 해당 로직을 수행합니다.
-        console.log("본인의 커플이름 :" + getCoupleName.data);
-        console.log("현재 커플 이름:" + coupleNameData);
         if (getCoupleName.data !== coupleNameData) {
           // 커플이름에 해당하는 첫 번째 이메일을 검색하고 저장합니다.
           const firstEmailResponse = await MemberAxiosApi.firstEmailGet(
@@ -109,16 +107,13 @@ const CoupleImg = () => {
   }, [coupleName]);
 
   const coupleNickNameAxios = async (emailData) => {
-    console.log("emailData : " + emailData);
     const resCouple = await MemberAxiosApi.renderCoupleNameSearch(emailData);
-    console.log("이거 :" + resCouple.data);
     const resNickName = await MainAxios.searchNickName(
       emailData,
       resCouple.data
     );
 
     setCoupleNickName(resNickName.data);
-    console.log("커플닉네임 확인:" + resNickName.data);
   };
   return (
     <Contain>

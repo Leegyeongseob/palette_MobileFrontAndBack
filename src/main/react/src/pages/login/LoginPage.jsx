@@ -301,7 +301,6 @@ const LoginPage = () => {
   const coupleNameSearchAxios = async (email) => {
     try {
       const resCoupleName = await LoginAxios.emailToCoupleNameSearch(email);
-      console.log(resCoupleName.data);
       // `coupleName`을 `sessionStorage`에 저장합니다.
       sessionStorage.setItem("coupleName", resCoupleName.data);
     } catch (error) {
@@ -325,8 +324,6 @@ const LoginPage = () => {
     try {
       const response = await LoginAxios.login(email, pwd);
       if (response.data.grantType === "bearer") {
-        console.log("accessToken : ", response.data.accessToken);
-        console.log("refreshToken : ", response.data.refreshToken);
         Common.setAccessToken(response.data.accessToken);
         Common.setRefreshToken(response.data.refreshToken);
         sessionStorage.setItem("email", email);
@@ -377,7 +374,6 @@ const LoginPage = () => {
   }, [kakaoKey]);
 
   const responseKakao = (response) => {
-    console.log(response);
     KaKaoData(response);
   };
   const KaKaoData = async (response) => {
@@ -389,13 +385,8 @@ const LoginPage = () => {
         kakaoName: response.profile.properties.nickname,
         kakaoImgUrl: response.profile.properties.profile_image,
       };
-      console.log("kakaoEmail:" + propsToPass.kakaoEmail);
-      console.log("kakaopwd:" + propsToPass.kakaopwd);
-      console.log("kakaoName:" + propsToPass.kakaoName);
-      console.log("kakaoImgUrl:" + propsToPass.kakaoImgUrl);
       //이메일 존재하는지 확인하는 부분
       const emailExist = await LoginAxios.emailIsExist(propsToPass.kakaoEmail);
-      console.log("emailExist:" + emailExist.data);
 
       //이메일 존재하면 화면이동
       if (emailExist.data) {
@@ -404,17 +395,13 @@ const LoginPage = () => {
           propsToPass.kakaoEmail,
           propsToPass.kakaopwd
         );
-        console.log("accessToken : ", res.data.accessToken);
-        console.log("refreshToken : ", res.data.refreshToken);
         Common.setAccessToken(res.data.accessToken);
         Common.setRefreshToken(res.data.refreshToken);
         sessionStorage.setItem("email", propsToPass.kakaoEmail);
         sessionStorage.setItem("kakaoImgUrl", propsToPass.kakaoImgUrl);
         //이메일로 커플이름 찾는 비동기 함수
         const coupleNameSearchAxios = async (email) => {
-          console.log(email);
           const resCoupleName = await LoginAxios.emailToCoupleNameSearch(email);
-          console.log(resCoupleName.data);
           // `coupleName`을 `sessionStorage`에 저장합니다.
           sessionStorage.setItem("coupleName", resCoupleName.data);
           navigate(`/main-page`);
@@ -423,8 +410,6 @@ const LoginPage = () => {
       }
       //아니면 여기로 이동
       else {
-        console.log("else문까지는 와요!");
-        console.log("Navigating to sign-up page with props:", propsToPass);
         navigate(`/signup-page`, { state: propsToPass });
       }
     } catch (error) {

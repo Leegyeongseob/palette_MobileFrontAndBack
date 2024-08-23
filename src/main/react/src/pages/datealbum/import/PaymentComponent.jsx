@@ -56,18 +56,7 @@ const PaymentComponent = ({ onPaymentSuccess, amount, order }) => {
     };
 
     try {
-      const token = localStorage.getItem("accessToken");
-
-      console.log("결제 요청 데이터:", {
-        storeId,
-        channelKey,
-        paymentId,
-        orderName,
-        totalAmount,
-        currency,
-        payMethod,
-        customer,
-      });
+      const token = localStorage.getItem("accessToken")
 
       const response = await PortOne.requestPayment({
         storeId: storeId,

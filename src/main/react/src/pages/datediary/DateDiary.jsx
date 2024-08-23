@@ -530,10 +530,8 @@ const DateDiary = () => {
       if (resDday.data !== "") {
         setIsDday(true);
         setSaveDday(resDday.data);
-        console.log("if 실행");
       } else {
         setIsDday(false);
-        console.log("else 실행");
       }
     } catch (error) {
       console.error("DDay 정보를 불러오는 중 에러 발생:", error);

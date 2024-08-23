@@ -147,7 +147,6 @@ const DatePlanner = ({ url, clearUrl }) => {
   // const email = sessionStorage.getItem("email");
   const coupleName = sessionStorage.getItem("coupleName");
   const currentOverlayRef = useRef(null); // CustomOverlay 상태를 useRef로 관리
-  console.log("coupleName : ", coupleName);
   // 버튼 상태 변수
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
   const settings = {
@@ -164,12 +163,10 @@ const DatePlanner = ({ url, clearUrl }) => {
     const fetchCourses = async () => {
       try {
         // const resCoupleName = await MemberAxiosApi.coupleNameSearch(email);
-        console.log("데이트 플레너의 coupleName", coupleName);
         const courses = await DatePlannerAxios.getCoursesByCoupleName(
           // resCoupleName.data
           coupleName
         );
-        console.log("도메인커플들어오나??", coupleName);
         setSavedCourses(courses);
       } catch (error) {
         console.error("❌ Error fetching courses:", error);
@@ -193,14 +190,10 @@ const DatePlanner = ({ url, clearUrl }) => {
       // newCourse.coupleName = resCoupleName.data;
       newCourse.coupleName = coupleName;
       if (isEditing) {
-        console.log(
-          `🔄 Updating course with ID ${savedCourses[currentCourseIndex].id}`
-        );
         savedCourse = await DatePlannerAxios.updateCourse(
           savedCourses[currentCourseIndex].id,
           newCourse
         );
-        console.log("✔️테스트 확인용", savedCourses[currentCourseIndex]);
         setSavedCourses((prevCourses) =>
           prevCourses.map((course, index) =>
             index === currentCourseIndex ? savedCourse : course
@@ -286,7 +279,6 @@ const DatePlanner = ({ url, clearUrl }) => {
   // 장소 카드 클릭 시 지도 이동 및 장소 정보 표시
   const onClickPlaceCard = (place) => {
     const position = new window.kakao.maps.LatLng(place.y, place.x);
-    console.log("장소", position);
     map.panTo(position);
     // displayPlaceInfo(place);
   };
@@ -297,7 +289,6 @@ const DatePlanner = ({ url, clearUrl }) => {
       const courseId = savedCourses[index].id;
       const course = await DatePlannerAxios.getCourseById(courseId);
       setModalSelectedPlaces(course.places);
-      console.log("모달확인", course.places);
       setIsModalOpen(true);
     } catch (error) {
       console.error("❌", error);
@@ -376,7 +367,6 @@ const DatePlanner = ({ url, clearUrl }) => {
   };
   // 장소 정보 표시 함수
   const displayPlaceInfo = (place) => {
-    console.log("장소정보실행");
 
     // 이전 CustomOverlay 제거
     clearOverlay();

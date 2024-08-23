@@ -344,10 +344,8 @@ const DateAlbum2 = () => {
     if (resDday.data !== "") {
       setIsDday(true);
       setSaveDday(resDday.data);
-      console.log("if실행");
     } else {
       setIsDday(false);
-      console.log("else 실행");
     }
   };
 

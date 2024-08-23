@@ -347,7 +347,6 @@ const DateAlbum = () => {
   const isAmountAxios = async () => {
     try {
       const response = await AlbumAxiosApi.getAmount(userEmail);
-      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error("Error fetching amount:", error);
@@ -365,7 +364,6 @@ const DateAlbum = () => {
       } else {
         // 모달
         nextModal();
-        console.log(amount);
       }
     } catch (error) {
       console.error("Error in handleNext:", error);
@@ -530,10 +528,8 @@ const DateAlbum = () => {
     if (resDday.data !== "") {
       setIsDday(true);
       setSaveDday(resDday.data);
-      console.log("if실행");
     } else {
       setIsDday(false);
-      console.log("else 실행");
     }
   };
   // 이미지 박스 렌더링 함수
